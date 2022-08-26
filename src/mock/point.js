@@ -1,6 +1,5 @@
 import { getRandomInteger } from '../utils.js';
 import { getOffers } from './offers.js';
-// import { getPointTypes } from './point-types,.js';
 
 const generateCities = () => {
 
@@ -52,34 +51,6 @@ const generatePointType = () => {
   return pointType[randomIndex];
 };
 
-
-// export const generateDestination = () => ({
-//   id: 1,
-//   description: generateDescription(),
-//   name: generateCities(),
-//   pictures: [
-//     {
-//       src: 'http://picsum.photos/300/200?r=0.0762563005163317',
-//       description: 'Chamonix parliament building',
-//     }
-//   ]
-// }
-// );
-
-
-/** Генерируем массив offers. он должен быть с 1 типом.
- * Типы и их offers можно посмотреть в файле src/mock/offers.js
- * */
-// const generateOffers = () => {
-//   const randomIndex = getRandomInteger(0, getOffers().length - 1);
-
-//   // const offers = [
-//   //   { id: 1, title: 'Infotainment system', price: 20 },
-//   // ];
-
-//   return getOffers()[randomIndex];
-// };
-
 const generatePictures = () => {
   const listPictures = [];
   for (let i = 0; i < getRandomInteger(0, 6); i++) {
@@ -108,10 +79,6 @@ export const getDestination = () => {
   return destinations;
 };
 
-
-// делаем из массива объектов, массив с id.
-// подробнее про метод map: https://learn.javascript.ru/array-methods#map
-// const getOffersId = (pointTypeInner) => getOffers().map((offer) => offer.id);
 const getOffersId = (type) => {
   for (let i = 0; i < getOffers().length; i++){
     if (getOffers()[i].type === type) {
@@ -120,19 +87,13 @@ const getOffersId = (type) => {
   }
 };
 
-
-// const generateRandomType = () => {
-//   // Берём из point-types рандомный индекс из массива и вытаскиваем Тип
-//   return getPointTypes()[getRandomInteger(0, getPointTypes().length - 1)].type
-// }
-
-export const generateDateForPoint = () => ({
-  basePrice: 1100,
-  dateFrom: '2019-07-10T22:55:56.845Z',
-  dateTo: '2019-07-11T11:22:13.375Z',
-  destination: getDestination()[getRandomInteger(0, getDestination().length - 1)].id, //$Destination.id$
+export const generateDataPoint = () => ({
+  basePrice: getRandomInteger(500, 3000),
+  dateFrom: new Date(getRandomInteger(2010, 2022), getRandomInteger(0, 24), getRandomInteger(0, 31), getRandomInteger(0, 60), getRandomInteger(0, 60)), //'2019-07-10T22:55:56.845Z',
+  dateTo: new Date(), //'2019-07-11T11:22:13.375Z',
+  destination: getDestination()[getRandomInteger(0, getDestination().length - 1)].id,
   id: '0',
-  offers: [], // [1,2,3] //$Array<Offer.id>$
+  offers: [],
   type: 0
 });
 
@@ -141,7 +102,7 @@ export const generatePoint = () => {
   const type = generatePointType();
   const offers = getOffersId(type);
 
-  const generatedObject = generateDateForPoint();
+  const generatedObject = generateDataPoint();
   generatedObject.type = type;
   generatedObject.offers = offers;
 

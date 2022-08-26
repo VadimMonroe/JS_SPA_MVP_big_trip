@@ -18,7 +18,6 @@ export default class PointModel {
   };
 
 
-
   /** Через map проходимся по сгенерированным points и применяем вспомогательную функцию */
   getPoints = () => this.points.map((point) => this.getPoint(point));
 }

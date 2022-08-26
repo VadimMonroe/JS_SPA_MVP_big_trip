@@ -28,23 +28,6 @@ const createNewPointTemplate = (point) => {
 
   const pictures = destination.pictures.map((pic) => eventPhoto(pic.src));
 
-  // console.log(point.destination.pictures[0].src);
-  // const eventPhotos = eventPhoto(destination.pictures[0].src);
-  // const pictures = () => {
-  //   destination.pictures.forEach((item) => {
-  //     eventPhoto(item.src);
-  //   });
-  //   return destination.pictures;
-  // };
-
-
-  // const eventPhotos = (destination.pictures) => {
-  //   if (destination.pictures) {
-  //     for 
-  //   }
-  // }
-  // destination.pictures?.length ? destination.pictures.map(eventPhoto()) : '';
-
   const offersCheckbox = offersTemplateCheckbox(offers);
 
   return (
