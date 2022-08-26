@@ -30,7 +30,7 @@ export default class BoardPresenter {
     // Передаем дополнительно массив offers
     render(new EditPointView(this.boardPoints[0], this.offers), this.eventsList.getElement());
     // Передаем дополнительно массив offers
-    render(new NewPointView(this.offers), this.eventsList.getElement());
+    render(new NewPointView(this.boardPoints[1], this.offers), this.eventsList.getElement());
 
     // отрисовываем готовые точки
     for (let i = 0; i < this.boardPoints.length; i++) {

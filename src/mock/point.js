@@ -1,6 +1,6 @@
-import { getRandomInteger, humanizeTime } from '../utils.js';
+import { getRandomInteger } from '../utils.js';
 import { getOffers } from './offers.js';
-import { getPointTypes } from './point-types,.js';
+// import { getPointTypes } from './point-types,.js';
 
 const generateCities = () => {
 
@@ -53,7 +53,6 @@ const generatePointType = () => {
 };
 
 
-
 // export const generateDestination = () => ({
 //   id: 1,
 //   description: generateDescription(),
@@ -66,7 +65,6 @@ const generatePointType = () => {
 //   ]
 // }
 // );
-
 
 
 /** Генерируем массив offers. он должен быть с 1 типом.
@@ -82,50 +80,56 @@ const generatePointType = () => {
 //   return getOffers()[randomIndex];
 // };
 
+const generatePictures = () => {
+  const listPictures = [];
+  for (let i = 0; i < getRandomInteger(0, 6); i++) {
+    listPictures.push({
+      src: `http://picsum.photos/300/200?r=0.076256300516331${i}`,
+      description: generateDescription(),
+    });
+  }
+  return listPictures;
+};
+
 export const getDestination = () => {
   const generateDestination = (idInner) => ({
     id: idInner,
     description: generateDescription(),
     name: generateCities(),
-    pictures: [
-      {
-        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
-        description: generateDescription(),
-      }
-    ]
+    pictures: generatePictures()
   }
   );
-  
-  let destinations = [];
-  
+
+  const destinations = [];
+
   for (let i = 0; i < 15; i++) {
     destinations.push(generateDestination(i));
   }
-  return destinations
-}
-
-
-// делаем из массива объектов, массив с id.
- // подробнее про метод map: https://learn.javascript.ru/array-methods#map
-// const getOffersId = (pointTypeInner) => getOffers().map((offer) => offer.id);
-const getOffersId = (type) => {
-  for (let i = 0; i < getOffers().length; i++){
-    if (getOffers()[i].type == type) {
-      return getOffers()[i].offers.map((offer) => offer.id);
-    };
-  };
+  return destinations;
 };
 
 
-const generateRandomType = () => {
-  // Берём из point-types рандомный индекс из массива и вытаскиваем Тип
-  return getPointTypes()[getRandomInteger(0, getPointTypes().length - 1)].type
-}
+// делаем из массива объектов, массив с id.
+// подробнее про метод map: https://learn.javascript.ru/array-methods#map
+// const getOffersId = (pointTypeInner) => getOffers().map((offer) => offer.id);
+const getOffersId = (type) => {
+  for (let i = 0; i < getOffers().length; i++){
+    if (getOffers()[i].type === type) {
+      return getOffers()[i].offers.map((offer) => offer.id);
+    }
+  }
+};
+
+
+// const generateRandomType = () => {
+//   // Берём из point-types рандомный индекс из массива и вытаскиваем Тип
+//   return getPointTypes()[getRandomInteger(0, getPointTypes().length - 1)].type
+// }
 
 export const generateDateForPoint = () => ({
   basePrice: 1100,
-  dateFrom: humanizeTime('2019-07-10T22:55:56.845Z'),
-  dateTo: humanizeTime('2019-07-11T11:22:13.375Z'),
+  dateFrom: '2019-07-10T22:55:56.845Z',
+  dateTo: '2019-07-11T11:22:13.375Z',
   destination: getDestination()[getRandomInteger(0, getDestination().length - 1)].id, //$Destination.id$
   id: '0',
   offers: [], // [1,2,3] //$Array<Offer.id>$
@@ -141,5 +145,5 @@ export const generatePoint = () => {
   generatedObject.type = type;
   generatedObject.offers = offers;
 
-  return generatedObject
+  return generatedObject;
 };

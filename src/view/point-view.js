@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import { humanizeDate } from '../utils.js';
+import { humanizeDate, humanizeTime } from '../utils.js';
 
 /** Вспомогательная функция, которая выводит разметку с параметрами */
 const createOfferTemplate = ({ title, price }) => (`
@@ -25,16 +25,16 @@ const createPointsTemplate = (point) => {
   return (`
     <li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="2019-03-18">${humanizeDate('2019-03-18')}</time>
+        <time class="event__date" datetime="2019-03-18">${humanizeDate(dateTo)}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${destination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T14:30">${dateFrom}</time>
+            <time class="event__start-time" datetime="2019-03-18T14:30">${humanizeTime(dateFrom)}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T16:05">${dateTo}</time>
+            <time class="event__end-time" datetime="2019-03-18T16:05">${humanizeTime(dateTo)}</time>
           </p>
         </div>
         <p class="event__price">
