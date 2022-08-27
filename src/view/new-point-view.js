@@ -1,5 +1,12 @@
 import {createElement} from '../render.js';
 import { humanizeDateTime } from '../utils.js';
+import { cities } from '../mock/point.js';
+
+const getCityFromCities = (city) => (
+  `
+    <option value="${city}"></option>
+  `
+);
 
 const offerTemplate = ({ title, price }) => (
   `
@@ -25,6 +32,18 @@ const offersTemplateCheckbox = (offers) => offers?.length ? offers.map(offerTemp
 
 const createNewPointTemplate = (point) => {
   const { basePrice, dateFrom, dateTo, destination, offers, type } = point;
+
+  const getAllCities = (citiesInner) => citiesInner?.length ? citiesInner.map(getCityFromCities) : '';
+  // const getAllCities = () => {
+  //   const listOfCities = [];
+  //   for (const city of cities) {
+  //     if (city !== destination.name) {
+  //       listOfCities.push(getCityFromCities(city));
+  //     }
+  //   }
+  //   console.log(listOfCities);
+  //   return listOfCities;
+  // };
 
   const pictures = destination.pictures.map((pic) => eventPhoto(pic.src));
 
@@ -96,13 +115,11 @@ const createNewPointTemplate = (point) => {
 
             <div class="event__field-group  event__field-group--destination">
               <label class="event__label  event__type-output" for="event-destination-1">
-                Flight
+                ${type}
               </label>
-              <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Geneva" list="destination-list-1">
+              <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
               <datalist id="destination-list-1">
-                <option value="Amsterdam"></option>
-                <option value="Geneva"></option>
-                <option value="Chamonix"></option>
+                ${getAllCities(cities)}
               </datalist>
             </div>
 

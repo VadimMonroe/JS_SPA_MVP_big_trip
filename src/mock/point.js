@@ -1,19 +1,15 @@
 import { getRandomInteger } from '../utils.js';
 import { getOffers } from './offers.js';
 
-const generateCities = () => {
 
-  const cities = [
-    'London',
-    'Dubai',
-    'Kazan',
-    'Los Angeles'
-  ];
+export const cities = [
+  'London',
+  'Dubai',
+  'Kazan',
+  'Los Angeles'
+];
 
-  const randomIndex = getRandomInteger(0, cities.length - 1);
-
-  return cities[randomIndex];
-};
+const generateCities = () => cities[getRandomInteger(0, cities.length - 1)];
 
 const generateDescription = () => {
 
@@ -53,7 +49,7 @@ const generatePointType = () => {
 
 const generatePictures = () => {
   const listPictures = [];
-  for (let i = 0; i < getRandomInteger(0, 6); i++) {
+  for (let i = 0; i < getRandomInteger(0, 9); i++) {
     listPictures.push({
       src: `http://picsum.photos/300/200?r=0.076256300516331${i}`,
       description: generateDescription(),
@@ -89,22 +85,17 @@ const getOffersId = (type) => {
 
 export const generateDataPoint = () => ({
   basePrice: getRandomInteger(500, 3000),
-  dateFrom: new Date(getRandomInteger(2010, 2022), getRandomInteger(0, 24), getRandomInteger(0, 31), getRandomInteger(0, 60), getRandomInteger(0, 60)), //'2019-07-10T22:55:56.845Z',
+  dateFrom: new Date(getRandomInteger(2010, 2022), getRandomInteger(0, 12), getRandomInteger(0, 31), getRandomInteger(0, 24), getRandomInteger(0, 60)),
   dateTo: new Date(), //'2019-07-11T11:22:13.375Z',
   destination: getDestination()[getRandomInteger(0, getDestination().length - 1)].id,
   id: '0',
   offers: [],
-  type: 0
+  type: generatePointType()
 });
 
 
 export const generatePoint = () => {
-  const type = generatePointType();
-  const offers = getOffersId(type);
-
   const generatedObject = generateDataPoint();
-  generatedObject.type = type;
-  generatedObject.offers = offers;
-
+  generatedObject.offers = getOffersId(generatedObject.type);
   return generatedObject;
 };

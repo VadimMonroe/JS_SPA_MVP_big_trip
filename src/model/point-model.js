@@ -6,7 +6,6 @@ export default class PointModel {
   points = Array.from({ length: 3 }, generatePoint);
 
   offers = getOffers();
-
   destinations = getDestination();
 
   getPoint = (point) => {
@@ -17,7 +16,5 @@ export default class PointModel {
     return {...point, offers, destination};
   };
 
-
-  /** Через map проходимся по сгенерированным points и применяем вспомогательную функцию */
   getPoints = () => this.points.map((point) => this.getPoint(point));
 }
