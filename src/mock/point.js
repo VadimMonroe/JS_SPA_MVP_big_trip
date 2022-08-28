@@ -28,22 +28,20 @@ const generateDescription = () => {
   return descriptions[randomIndex];
 };
 
+export const pointType = [
+  'taxi',
+  'bus',
+  'train',
+  'ship',
+  'drive',
+  'flight',
+  'check-in',
+  'sightseeing',
+  'restaurant'
+];
+
 const generatePointType = () => {
-
-  const pointType = [
-    'taxi',
-    'bus',
-    'train',
-    'ship',
-    'drive',
-    'flight',
-    'check-in',
-    'sightseeing',
-    'restaurant'
-  ];
-
   const randomIndex = getRandomInteger(0, pointType.length - 1);
-
   return pointType[randomIndex];
 };
 
@@ -75,13 +73,9 @@ export const getDestination = () => {
   return destinations;
 };
 
-const getOffersId = (type) => {
-  for (let i = 0; i < getOffers().length; i++){
-    if (getOffers()[i].type === type) {
-      return getOffers()[i].offers.map((offer) => offer.id);
-    }
-  }
-};
+
+const getOffersId = (type) => getOffers().find((offer) => offer.type === type).offers.map((offer) => offer.id);
+
 
 export const generateDataPoint = () => ({
   basePrice: getRandomInteger(500, 3000),
@@ -97,5 +91,6 @@ export const generateDataPoint = () => ({
 export const generatePoint = () => {
   const generatedObject = generateDataPoint();
   generatedObject.offers = getOffersId(generatedObject.type);
+  generatedObject.offers.pop();
   return generatedObject;
 };

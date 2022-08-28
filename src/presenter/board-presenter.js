@@ -9,20 +9,58 @@ export default class BoardPresenter {
   eventsList = new TripListView();
 
   init = (boardContainer, pointsModel) => {
+    // Общий контейнер
     this.boardContainer = boardContainer;
+
+    // Получаем модели
     this.pointsModel = pointsModel;
+    // Обновляем модели
+    this.boardPoints = this.pointsModel.points;
 
-    // Получаем все обновленные points
-    this.boardPoints = this.pointsModel.getPoints();
-
+    // Отрисовываем сортировки
     render(new SortView(), this.boardContainer);
-    render(this.eventsList, this.boardContainer);
-    render(new NewPointView(this.boardPoints[1]), this.eventsList.getElement());
-    render(new EditPointView(this.boardPoints[0]), this.eventsList.getElement());
 
-    // отрисовываем готовые точки
+    // Отрисовываем контейнер для точек
+    render(this.eventsList, this.boardContainer);
+
+    // render(new NewPointView(this.boardPoints[1]), this.eventsList.getElement());
+    // render(new EditPointView(this.boardPoints[0]), this.eventsList.getElement());
+    // for (let i = 0; i < this.boardPoints.length; i++) {
+    //   render(new PointsView(this.boardPoints[i]), this.eventsList.getElement());
+    // }
+
+    // Отрисовываем готовые точки
     for (let i = 0; i < this.boardPoints.length; i++) {
-      render(new PointsView(this.boardPoints[i]), this.eventsList.getElement());
+      this.#renderPoint(this.boardPoints[i]);
     }
   };
+
+  #renderPoint = (point) => {
+    const pointComponent = new PointsView(point);
+    const editPointComponent = new EditPointView(point);
+
+    // ----------
+
+    const replacePointToEditForm = () => {
+      this.eventsList.element.replaceChild(editPointComponent.element, pointComponent.element);
+    };
+
+    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replacePointToEditForm();
+    });
+
+    // ----------
+
+    const replaceEditFormToPoint = () => {
+      this.eventsList.element.replaceChild(pointComponent.element, editPointComponent.element);
+    };
+
+    editPointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replaceEditFormToPoint();
+    });
+
+    render(pointComponent, this.eventsList.element);
+  };
+
 }
+

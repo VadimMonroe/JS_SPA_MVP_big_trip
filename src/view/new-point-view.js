@@ -1,6 +1,7 @@
 import {createElement} from '../render.js';
 import { humanizeDateTime } from '../utils.js';
-import { cities } from '../mock/point.js';
+import { cities, pointType } from '../mock/point.js';
+import { getOffers } from '../mock/offers.js';
 
 const getCityFromCities = (city) => (
   `
@@ -8,10 +9,16 @@ const getCityFromCities = (city) => (
   `
 );
 
-const offerTemplate = ({ title, price }) => (
+const eventPhoto = (picture) => (
+  `  
+    <img class="event__photo" src="${picture}" alt="Event photo">
+  `
+);
+
+const offerTemplate = (title, price, checked) => (
   `
   <div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${checked}>
     
     <label class="event__offer-label" for="event-offer-luggage-1">
       <span class="event__offer-title">${title}</span>
@@ -22,32 +29,69 @@ const offerTemplate = ({ title, price }) => (
   `
 );
 
-const eventPhoto = (picture) => (
-  `  
-    <img class="event__photo" src="${picture}" alt="Event photo">
+
+const getAllOffersId = (type, offersInner) => {
+  const listOfAllOffers = getOffers().find((offer) => offer.type === type).offers;
+
+  let checked = null;
+  const finalListOfOffers = [];
+
+  for (let i = 0; i < listOfAllOffers.length; i++) {
+    if (offersInner[i]) {
+      checked = listOfAllOffers[i].id === offersInner[i].id ? 'checked' : '';
+    } else {
+      checked = '';
+    }
+    finalListOfOffers.push(offerTemplate(listOfAllOffers[i].title, listOfAllOffers[i].price, checked));
+  }
+  return finalListOfOffers.join('');
+};
+
+const offersTemplateContainer = (allOffers) => {
+  if (allOffers !== '') {
+    return (
+      `
+        <section class="event__section  event__section--offers">
+          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+        
+          <div class="event__available-offers">
+            ${allOffers}
+          </div>
+        </section>
+      `
+    );
+  }
+  return '';
+};
+
+const iconsTypesMarking = (typeInner, checked) => (
+  `
+    <div class="event__type-item">
+      <input id="event-type-${typeInner}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeInner}" ${checked}>
+      <label class="event__type-label  event__type-label--${typeInner}" for="event-type-${typeInner}-1">${typeInner}</label>
+    </div>
   `
 );
 
-const offersTemplateCheckbox = (offers) => offers?.length ? offers.map(offerTemplate) : '';
+const iconsTypesChecked = (typeInner) => {
+  const iconsListMarking = [];
+  let checked = '';
+  for (let i = 0; i < pointType.length; i++) {
+    checked = typeInner === pointType[i] ? 'checked' : '';
+    iconsListMarking.push(iconsTypesMarking(pointType[i], checked));
+  }
+  return iconsListMarking.join('');
+};
 
 const createNewPointTemplate = (point) => {
   const { basePrice, dateFrom, dateTo, destination, offers, type } = point;
 
-  const getAllCities = (citiesInner) => citiesInner?.length ? citiesInner.map(getCityFromCities) : '';
-  // const getAllCities = () => {
-  //   const listOfCities = [];
-  //   for (const city of cities) {
-  //     if (city !== destination.name) {
-  //       listOfCities.push(getCityFromCities(city));
-  //     }
-  //   }
-  //   console.log(listOfCities);
-  //   return listOfCities;
-  // };
+  const getAllCities = (citiesInner) => citiesInner?.length ? citiesInner.map(getCityFromCities).join('') : '';
 
-  const pictures = destination.pictures.map((pic) => eventPhoto(pic.src));
+  const pictures = destination.pictures.map((pic) => eventPhoto(pic.src)).join('');
 
-  const offersCheckbox = offersTemplateCheckbox(offers);
+  const allOffersByType = getAllOffersId(type, offers);
+  const offersContainer = offersTemplateContainer(allOffersByType);
 
   return (
     `
@@ -64,51 +108,8 @@ const createNewPointTemplate = (point) => {
               <div class="event__type-list">
                 <fieldset class="event__type-group">
                   <legend class="visually-hidden">Event type</legend>
+                  ${iconsTypesChecked(type)}
 
-                  <div class="event__type-item">
-                    <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-                    <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
-                  </div>
-
-                  <div class="event__type-item">
-                    <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
-                    <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
-                  </div>
-
-                  <div class="event__type-item">
-                    <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
-                    <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
-                  </div>
-
-                  <div class="event__type-item">
-                    <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
-                    <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
-                  </div>
-
-                  <div class="event__type-item">
-                    <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
-                    <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
-                  </div>
-
-                  <div class="event__type-item">
-                    <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
-                    <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
-                  </div>
-
-                  <div class="event__type-item">
-                    <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-                    <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-                  </div>
-
-                  <div class="event__type-item">
-                    <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-                    <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-                  </div>
-
-                  <div class="event__type-item">
-                    <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
-                    <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
-                  </div>
                 </fieldset>
               </div>
             </div>
@@ -143,13 +144,7 @@ const createNewPointTemplate = (point) => {
             <button class="event__reset-btn" type="reset">Cancel</button>
           </header>
           <section class="event__details">
-            <section class="event__section  event__section--offers">
-              <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-              <div class="event__available-offers">
-                ${offersCheckbox}
-              </div>
-            </section>
+            ${offersContainer}
 
             <section class="event__section  event__section--destination">
               <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -169,23 +164,25 @@ const createNewPointTemplate = (point) => {
 };
 
 export default class NewPointView {
+  #element = null;
+
   constructor(point) {
     this.point = point;
   }
 
-  getTemplate() {
+  get template() {
     return createNewPointTemplate(this.point);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
