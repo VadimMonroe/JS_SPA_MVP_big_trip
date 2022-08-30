@@ -2,7 +2,7 @@ import { render } from '../render.js';
 import PointsView from '../view/point-view.js';
 import SortView from '../view/sort-view.js';
 import TripListView from '../view/trip-events-list-view';
-// import NewPointView from '../view/new-point-view.js';
+import NewPointView from '../view/new-point-view.js';
 import EditPointView from '../view/edit-point-view.js';
 import EmptyView from '../view/empty-points-view.js';
 
@@ -28,10 +28,10 @@ export default class BoardPresenter {
     if (this.boardPoints.every((point) => point.isArchive)) {
       render(new EmptyView(), this.eventsList.element);
     } else {
-      // render(new NewPointView(this.boardPoints[1]), this.eventsList.getElement());
-      // render(new EditPointView(this.boardPoints[0]), this.eventsList.getElement());
+      render(new NewPointView(this.boardPoints[1]), this.eventsList.element);
+      // render(new EditPointView(this.boardPoints[0]), this.eventsList.element);
       // for (let i = 0; i < this.boardPoints.length; i++) {
-      //   render(new PointsView(this.boardPoints[i]), this.eventsList.getElement());
+      //   render(new PointsView(this.boardPoints[i]), this.eventsList.element);
       // }
 
       // Отрисовываем готовые точки

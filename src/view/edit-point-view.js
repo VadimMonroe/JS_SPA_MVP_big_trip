@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import { createElement } from '../render.js';
 import { humanizeDateTime } from '../utils.js';
 import { cities, pointType } from '../mock/point.js';
 import { getOffers } from '../mock/offers.js';
@@ -15,12 +15,12 @@ const eventPhoto = (picture) => (
   `
 );
 
-const offerTemplate = (title, price, checked) => (
+const offerTemplate = (id, title, price, checked) => (
   `
   <div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${checked}>
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title}-${id}" type="checkbox" name="event-offer-${title}" ${checked}>
     
-    <label class="event__offer-label" for="event-offer-luggage-1">
+    <label class="event__offer-label" for="event-offer-${title}-${id}">
       <span class="event__offer-title">${title}</span>
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${price}</span>
@@ -37,12 +37,13 @@ const getAllOffersId = (type, offersInner) => {
   const finalListOfOffers = [];
 
   for (let i = 0; i < listOfAllOffers.length; i++) {
+
     if (offersInner[i]) {
-      checked = listOfAllOffers[i].id === offersInner[i].id ? 'checked' : '';
+      checked = String(listOfAllOffers[i].id).includes(String(offersInner[i].id)) ? 'checked' : '';
     } else {
       checked = '';
     }
-    finalListOfOffers.push(offerTemplate(listOfAllOffers[i].title, listOfAllOffers[i].price, checked));
+    finalListOfOffers.push(offerTemplate(listOfAllOffers[i].id, listOfAllOffers[i].title, listOfAllOffers[i].price, checked));
   }
   return finalListOfOffers.join('');
 };
