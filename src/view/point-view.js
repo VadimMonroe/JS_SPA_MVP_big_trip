@@ -1,7 +1,6 @@
-import { createElement } from '../render.js';
-import { humanizeDate, humanizeTime } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { humanizeDate, humanizeTime, humanizeDateTimeForFilters } from '../utils/utils.js';
 
-/** Вспомогательная функция, которая выводит разметку с параметрами */
 const createOfferTemplate = ({ title, price }) => (`
   <li class="event__offer">
     <span class="event__offer-title">${title}</span>
@@ -10,31 +9,25 @@ const createOfferTemplate = ({ title, price }) => (`
   </li>
 `);
 
-/** Вспомогательная функция, которая проходится по каждому элементу массива, и применяет функцию createOfferTemplate
- * Т.е после метода map мы получим просто массив со строками,
- * а потом через join обведением их и получаем одну цельную строку
-*/
-const createOffersTemplate = (offers) => offers?.length ? offers.map(createOfferTemplate).join('') : '';
+const createOffersTemplate = (offers) => offers.length ? offers.map(createOfferTemplate).join('') : '';
 
 const createPointsTemplate = (point) => {
   const { basePrice, dateFrom, dateTo, destination, offers, type } = point;
-
-  /** Создаем разметку с offers */
   const offersTemplate = createOffersTemplate(offers);
 
   return (`
     <li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="2019-03-18">${humanizeDate(dateTo)}</time>
+        <time class="event__date" datetime=${humanizeDateTimeForFilters(dateFrom)}>${humanizeDate(dateFrom)}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${destination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${dateFrom}">${humanizeTime(dateFrom)}</time>
+            <time class="event__start-time" datetime=${dateFrom}>${humanizeTime(dateFrom)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${dateTo}">${humanizeTime(dateTo)}</time>
+            <time class="event__end-time" datetime=${dateTo}>${humanizeTime(dateTo)}</time>
           </p>
         </div>
         <p class="event__price">
@@ -52,10 +45,9 @@ const createPointsTemplate = (point) => {
   `);
 };
 
-export default class PointsView {
-  #element = null;
-
+export default class PointsView extends AbstractView {
   constructor(point) {
+    super();
     this.point = point;
   }
 
@@ -63,15 +55,13 @@ export default class PointsView {
     return createPointsTemplate(this.point);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setPointClickHandler = (callback) => {
+    this._callback.pointClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#pointClickHandler);
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #pointClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.pointClick();
+  };
 }
